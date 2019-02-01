@@ -1,26 +1,26 @@
-FROM ubuntu
-RUN apt update && apt install -y git python gcc python-pip cmake
-
+FROM jupyterhub/jupyterhub
+RUN apt update && apt install -y git gcc g++ cmake
+RUN conda install notebook
 ## Copy local data into container
 COPY . /code
 
 ## Start installing stuff
 WORKDIR /code
-RUN pip install -r requirements.txt
+RUN ls
+RUN bash ./addUsersWithPasswords.sh
+RUN rm usersAndPasswords.txt
 
-## Install elastix
-RUN apt install -y libinsighttoolkit4-dev zlib-devel
-RUN git clone https://github.com/SuperElastix/elastix.git
-WORKDIR /code/elastix
-RUN cmake . && make -j4 && make install
 
-## Install niftyreg
+# RUN pip install -r requirements.txt
+# ## Install elastix
+RUN apt install -y elastix
+
+
+# ## Install niftyreg
 WORKDIR /code
-RUN git clone https://github.com/KCL-BMEIS/niftyreg.git
-WORKDIR /code/niftyreg
-RUN cmake . && make && make install
+RUN git clone https://github.com/KCL-BMEIS/niftyreg.git && mkdir nifty-build
+WORKDIR /code/nifty-build
+RUN cmake ../niftyreg && make -j10 && make install
 
+EXPOSE 8000
 
-EXPOSE 6006
-
-CMD ["sh"]
