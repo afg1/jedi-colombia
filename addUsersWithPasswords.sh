@@ -11,5 +11,8 @@ do
     uname="$(cut -d' ' -f1 <<<"$us")"
     pword="$(cut -d' ' -f2 <<<"$us")"
     useradd -rm -d /home/$uname -p "$(openssl passwd -1 $pword)" $uname
-    cp -R /code/jedi-colombia-project /home/$uname/
+    # cp -R /code/jedi-colombia-project /home/$uname/
+    cd /home/$uname
+    git clone https://github.com/afg1/jedi-colombia-project-complete.git
+    chown -R $uname:$uname jedi-colombia-project-complete
 done < usersAndPasswords.txt
