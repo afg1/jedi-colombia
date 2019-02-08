@@ -3,3 +3,4 @@ numpy
 scipy
 SimpleITK
 matplotlib
+tqdm
